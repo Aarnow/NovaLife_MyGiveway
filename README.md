@@ -19,7 +19,6 @@ Ce plugin Novalife MyGiveway...
 ## Utilisation
 
 Le Plugin MyGiveway...
-1. Intégrez le Plugin MyMenu.dll en tant que référence dans votre projet Novalife.
 
 ## Fonctionnalités
 
