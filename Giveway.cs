@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Life.VehicleSystem;
+using Life;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace MyGiveway
@@ -14,9 +17,9 @@ namespace MyGiveway
         public List<int> PlayersId { get; set; } = new List<int>();
 
         public double Money { get; set; }
-        public List<int> VehiclesId { get; set; } = new List<int>();
-        public List<int> AreasId  { get; set; } = new List<int>();
-        public List<int> ItemsId { get; set; } = new List<int>();
+        public Dictionary<int, int> VehiclesId { get; set; } = new Dictionary<int, int>();
+        public List<uint> AreasId  { get; set; } = new List<uint>();
+        public Dictionary<int, int> ItemsId { get; set; } = new Dictionary<int, int>();
 
         public Giveway()
         {
@@ -43,6 +46,25 @@ namespace MyGiveway
             }
 
             return sb.ToString();
+        }
+
+        public bool TryParseDateTime(string input, out DateTime result)
+        {
+            string[] format = { "dd/MM/yyyy - HH'h'mm", "dd/MM/yyyy - HH'h'mm" };
+            return DateTime.TryParseExact(input, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
+        }
+
+        public int getVehicleIconId(int modelId)
+        {
+            Vehicle vehicle = Nova.v.vehicleModels[modelId];
+            int iconId = Array.IndexOf(LifeManager.instance.icons, vehicle.icon);
+            return iconId >= 0 ? iconId : Array.IndexOf(LifeManager.instance.icons, LifeManager.instance.item.GetItem(1112).icon);
+        }
+
+        public int getItemIconId(int itemId)
+        {
+            int iconId = Array.IndexOf(LifeManager.instance.icons, LifeManager.instance.item.GetItem(itemId).icon);
+            return iconId >= 0 ? iconId : Array.IndexOf(LifeManager.instance.icons, LifeManager.instance.item.GetItem(1112).icon);
         }
     }
 }
