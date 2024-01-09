@@ -39,7 +39,6 @@ namespace MyGiveway
 
             player.ShowPanelUI(panel);
         }
-
         public static void SetupGiveway(Player player, Giveway gw = null)
         {
             if(gw == null) gw = new Giveway();
@@ -65,13 +64,17 @@ namespace MyGiveway
             panel.AddTabLine($"Objets: {(gw.ItemsId.Count == 0 ? "aucun" : $"{gw.ItemsId.Count}")}", ui => PanelManager.NextPanel(player, ui, () => ItemsList(player, gw)));
 
             panel.AddButton("Modifier", ui => ui.SelectTab());
-            panel.AddButton("Sauvegarder", ui => Debug.Log("Save"));
+            panel.AddButton("Sauvegarder", ui =>
+            {
+                gw.Save();
+                Main.GivewayList.Add(gw);
+                PanelManager.NextPanel(player, ui, () => Open(player));
+            });
             panel.AddButton("Retour", ui => PanelManager.NextPanel(player, ui, ()=> Open(player)));
             panel.AddButton("Fermer", ui => PanelManager.Quit(ui, player));
 
             player.ShowPanelUI(panel);
         }
-
         public static void SetName(Player player, Giveway gw)
         {
             UIPanel panel = new UIPanel("MyGiveway", UIPanel.PanelType.Input).SetTitle($"MyGiveway");
@@ -120,7 +123,7 @@ namespace MyGiveway
 
             panel.AddButton("Valider", ui =>
             {
-                if (gw.TryParseDateTime(ui.inputText, out DateTime dateTime))
+                if (Utils.TryParseDateTime(ui.inputText, out DateTime dateTime))
                 {
                     gw.ExpirationDate = dateTime;
                     PanelManager.NextPanel(player, ui, () => SetupGiveway(player, gw));
@@ -140,7 +143,7 @@ namespace MyGiveway
         {
             UIPanel panel = new UIPanel("MyGiveway", UIPanel.PanelType.Input).SetTitle($"MyGiveway");
 
-            panel.inputPlaceholder = "Nommer votre code";
+            panel.inputPlaceholder = "Définir un montant";
 
             panel.AddButton("Valider", ui =>
             {
@@ -236,7 +239,7 @@ namespace MyGiveway
                 foreach (KeyValuePair<int, int> keyValue in gw.VehiclesId)
                 {
                     Vehicle vehicle = Nova.v.vehicleModels[keyValue.Key];
-                    panel.AddTabLine($"{vehicle.vehicleName}", $"quantité: {keyValue.Value}", gw.getVehicleIconId(keyValue.Key), (ui) =>
+                    panel.AddTabLine($"{vehicle.vehicleName}", $"quantité: {keyValue.Value}", Utils.getVehicleIconId(keyValue.Key), (ui) =>
                     {
                         gw.VehiclesId.Remove(keyValue.Key);
                     });
@@ -309,7 +312,7 @@ namespace MyGiveway
                 foreach (KeyValuePair<int, int> keyValue in gw.ItemsId)
                 {
                     Item item = Nova.man.item.GetItem(keyValue.Key);
-                    panel.AddTabLine($"{item.itemName}", $"quantité: {keyValue.Value}", gw.getItemIconId(keyValue.Key), (ui) =>
+                    panel.AddTabLine($"{item.itemName}", $"quantité: {keyValue.Value}", Utils.getItemIconId(keyValue.Key), (ui) =>
                     {
                         gw.ItemsId.Remove(keyValue.Key);
                     });

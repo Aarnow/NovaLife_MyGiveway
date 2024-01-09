@@ -1,21 +1,20 @@
-﻿using Life.VehicleSystem;
-using Life;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.IO;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace MyGiveway
 {
     public class Giveway
     {
+        public string Slug { get; set; }
         public string Name { set; get; }
         public bool IsActive { get; set; }
         public bool IsSingleUse { get; set; }
         public string Code { get; set; }    
         public DateTime ExpirationDate { get; set; }
         public List<int> PlayersId { get; set; } = new List<int>();
-
         public double Money { get; set; }
         public Dictionary<int, int> VehiclesId { get; set; } = new Dictionary<int, int>();
         public List<uint> AreasId  { get; set; } = new List<uint>();
@@ -48,23 +47,20 @@ namespace MyGiveway
             return sb.ToString();
         }
 
-        public bool TryParseDateTime(string input, out DateTime result)
+        public void Save()
         {
-            string[] format = { "dd/MM/yyyy - HH'h'mm", "dd/MM/yyyy - HH'h'mm" };
-            return DateTime.TryParseExact(input, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
-        }
+            int number = 0;
+            string filePath;
 
-        public int getVehicleIconId(int modelId)
-        {
-            Vehicle vehicle = Nova.v.vehicleModels[modelId];
-            int iconId = Array.IndexOf(LifeManager.instance.icons, vehicle.icon);
-            return iconId >= 0 ? iconId : Array.IndexOf(LifeManager.instance.icons, LifeManager.instance.item.GetItem(1112).icon);
-        }
+            do
+            {
+                Slug = $"{Name}_{number}";
+                filePath = Path.Combine(Main.directoryPath, $"{Slug}.json");
+                number++;
+            } while (File.Exists(filePath));
 
-        public int getItemIconId(int itemId)
-        {
-            int iconId = Array.IndexOf(LifeManager.instance.icons, LifeManager.instance.item.GetItem(itemId).icon);
-            return iconId >= 0 ? iconId : Array.IndexOf(LifeManager.instance.icons, LifeManager.instance.item.GetItem(1112).icon);
+            string json = JsonConvert.SerializeObject(this, Formatting.Indented);
+            File.WriteAllText(filePath, json);
         }
     }
 }
