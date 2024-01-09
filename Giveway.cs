@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
+using Life;
+using Life.Network;
 using Newtonsoft.Json;
+using UIPanelManager;
 
 namespace MyGiveway
 {
@@ -45,6 +49,17 @@ namespace MyGiveway
             }
 
             return sb.ToString();
+        }
+
+        public void Delete(Player player)
+        {
+            string path = Path.Combine(Main.directoryPath, Slug + ".json");
+            if (File.Exists(path))
+            {
+                File.Delete(path);              
+                Main.GivewayList.Remove(this);
+                PanelManager.Notification(player, "Succès", "Le code à bien été supprimé", NotificationManager.Type.Success);
+            } else  PanelManager.Notification(player, "Erreur", "Nous n'avons pas pu supprimer ce code", NotificationManager.Type.Error);
         }
 
         public void Save()

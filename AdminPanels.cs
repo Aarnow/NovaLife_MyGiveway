@@ -24,12 +24,18 @@ namespace MyGiveway
             {
                 foreach (Giveway giveway in Main.GivewayList)
                 {
-                    panel.AddTabLine($"{giveway.Name}", ui => Debug.Log("delete"));
+                    panel.AddTabLine($"{giveway.Name}", ui => giveway.Delete(player));
                 }
             }
             
 
             panel.AddButton("Ajouter", ui => PanelManager.NextPanel(player, ui, () => SetupGiveway(player)));
+            panel.AddButton("Modifier", ui =>
+            {
+                Giveway giveway = Main.GivewayList[ui.selectedTab];
+                if (giveway != null) PanelManager.NextPanel(player, ui, () => SetupGiveway(player, giveway));
+                else PanelManager.Notification(player, "Erreur", "Vous devez sélectionner un Giveway afin de le modifier", NotificationManager.Type.Error);
+            });
             panel.AddButton("Supprimer", ui =>
             {
                 ui.SelectTab();
