@@ -72,8 +72,13 @@ namespace MyGiveway
             panel.AddButton("Modifier", ui => ui.SelectTab());
             panel.AddButton("Sauvegarder", ui =>
             {
-                gw.Save();
-                Main.GivewayList.Add(gw);
+                if (gw.IsSaved) gw.Update();
+                else
+                {
+                    gw.IsSaved = true;
+                    gw.Save();
+                    Main.GivewayList.Add(gw);
+                }
                 PanelManager.NextPanel(player, ui, () => Open(player));
             });
             panel.AddButton("Retour", ui => PanelManager.NextPanel(player, ui, ()=> Open(player)));

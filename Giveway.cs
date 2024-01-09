@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using I2.Loc.SimpleJSON;
 using Life;
 using Life.Network;
 using Newtonsoft.Json;
@@ -16,6 +17,7 @@ namespace MyGiveway
         public string Name { set; get; }
         public bool IsActive { get; set; }
         public bool IsSingleUse { get; set; }
+        public bool IsSaved { get; set; }
         public string Code { get; set; }    
         public DateTime ExpirationDate { get; set; }
         public List<int> PlayersId { get; set; } = new List<int>();
@@ -32,6 +34,7 @@ namespace MyGiveway
             Code = GenerateCode();
             ExpirationDate = new DateTime(2050, 01, 01, 00, 00, 00);
             Money = 0;
+            IsSaved = false;
         }
 
         private string GenerateCode()
@@ -60,6 +63,16 @@ namespace MyGiveway
                 Main.GivewayList.Remove(this);
                 PanelManager.Notification(player, "Succès", "Le code à bien été supprimé", NotificationManager.Type.Success);
             } else  PanelManager.Notification(player, "Erreur", "Nous n'avons pas pu supprimer ce code", NotificationManager.Type.Error);
+        }
+
+        public void Update()
+        {
+            string path = Path.Combine(Main.directoryPath, Slug + ".json");
+            if (File.Exists(path))
+            {
+                string json = JsonConvert.SerializeObject(this, Formatting.Indented);
+                File.WriteAllText(path, json);
+            }
         }
 
         public void Save()
