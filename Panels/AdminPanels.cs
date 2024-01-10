@@ -9,7 +9,7 @@ using Life.VehicleSystem;
 using System.Collections.Generic;
 using Life.InventorySystem;
 
-namespace MyGiveway
+namespace MyGiveway.Panels
 {
     abstract class AdminPanels
     {
@@ -17,17 +17,17 @@ namespace MyGiveway
         {
             UIPanel panel = new UIPanel("MyGiveway", UIPanel.PanelType.Tab).SetTitle($"MyGiveway");
 
-            if(Main.GivewayList.Count == 0)
+            if (Main.GivewayList.Count == 0)
             {
                 panel.AddTabLine($"Aucun code", ui => Debug.Log("delete"));
-            } else
+            }
+            else
             {
                 foreach (Giveway giveway in Main.GivewayList)
                 {
-                    panel.AddTabLine($"{giveway.Name}", ui => giveway.Delete(player));
+                    panel.AddTabLine($"{giveway.Name} (<color=yellow>{giveway.Code}</color>)", ui => giveway.Delete(player));
                 }
             }
-            
 
             panel.AddButton("Ajouter", ui => PanelManager.NextPanel(player, ui, () => SetupGiveway(player)));
             panel.AddButton("Modifier", ui =>
@@ -47,11 +47,11 @@ namespace MyGiveway
         }
         public static void SetupGiveway(Player player, Giveway gw = null)
         {
-            if(gw == null) gw = new Giveway();
+            if (gw == null) gw = new Giveway();
 
             UIPanel panel = new UIPanel("MyGiveway", UIPanel.PanelType.Tab).SetTitle($"MyGiveway");
-            
-            panel.AddTabLine($"Nom: {gw.Name}", ui => PanelManager.NextPanel(player,ui,()=> SetName(player, gw)));
+
+            panel.AddTabLine($"Nom: {gw.Name}", ui => PanelManager.NextPanel(player, ui, () => SetName(player, gw)));
             panel.AddTabLine($"Code: {gw.Code}", ui => PanelManager.NextPanel(player, ui, () => SetCode(player, gw)));
             panel.AddTabLine($"Date d'expiration: {gw.ExpirationDate.ToString("dd/MM/yyyy - HH'h'mm")}", ui => PanelManager.NextPanel(player, ui, () => SetDate(player, gw)));
             panel.AddTabLine($"Etat: {(gw.IsActive ? "Actif" : "Inactif")}", ui =>
@@ -81,7 +81,7 @@ namespace MyGiveway
                 }
                 PanelManager.NextPanel(player, ui, () => Open(player));
             });
-            panel.AddButton("Retour", ui => PanelManager.NextPanel(player, ui, ()=> Open(player)));
+            panel.AddButton("Retour", ui => PanelManager.NextPanel(player, ui, () => Open(player)));
             panel.AddButton("Fermer", ui => PanelManager.Quit(ui, player));
 
             player.ShowPanelUI(panel);
@@ -99,7 +99,7 @@ namespace MyGiveway
                     gw.Name = ui.inputText;
                     PanelManager.NextPanel(player, ui, () => SetupGiveway(player, gw));
                 }
-                else PanelManager.Notification(player, "Erreur", "Vous devez renseigner une valeur", Life.NotificationManager.Type.Error);
+                else PanelManager.Notification(player, "Erreur", "Vous devez renseigner une valeur", NotificationManager.Type.Error);
             });
             panel.AddButton("Retour", ui => PanelManager.NextPanel(player, ui, () => SetupGiveway(player, gw)));
             panel.AddButton("Fermer", ui => PanelManager.Quit(ui, player));
@@ -119,7 +119,7 @@ namespace MyGiveway
                     gw.Code = ui.inputText;
                     PanelManager.NextPanel(player, ui, () => SetupGiveway(player, gw));
                 }
-                else PanelManager.Notification(player, "Erreur", "Vous devez renseigner un code de 3 caractères minimum", Life.NotificationManager.Type.Error);
+                else PanelManager.Notification(player, "Erreur", "Vous devez renseigner un code de 3 caractères minimum", NotificationManager.Type.Error);
             });
             panel.AddButton("Retour", ui => PanelManager.NextPanel(player, ui, () => SetupGiveway(player, gw)));
             panel.AddButton("Fermer", ui => PanelManager.Quit(ui, player));
@@ -142,7 +142,7 @@ namespace MyGiveway
                 else
                 {
                     PanelManager.NextPanel(player, ui, () => SetDate(player, gw));
-                    PanelManager.Notification(player, "Erreur", "Veuillez respecter l'exemple", Life.NotificationManager.Type.Error);
+                    PanelManager.Notification(player, "Erreur", "Veuillez respecter l'exemple", NotificationManager.Type.Error);
                 }
             });
             panel.AddButton("Retour", ui => PanelManager.NextPanel(player, ui, () => SetupGiveway(player, gw)));
@@ -160,13 +160,14 @@ namespace MyGiveway
             {
                 if (ui.inputText.Length > 0)
                 {
-                    if(double.TryParse(ui.inputText, out double money))
+                    if (double.TryParse(ui.inputText, out double money))
                     {
                         gw.Money = money;
                         PanelManager.NextPanel(player, ui, () => SetupGiveway(player, gw));
-                    } else PanelManager.Notification(player, "Erreur", "Vous ne devez utiliser que des chiffres (négatif autorisés)", Life.NotificationManager.Type.Error);
+                    }
+                    else PanelManager.Notification(player, "Erreur", "Vous ne devez utiliser que des chiffres (négatif autorisés)", NotificationManager.Type.Error);
                 }
-                else PanelManager.Notification(player, "Erreur", "Vous devez renseigner une valeur", Life.NotificationManager.Type.Error);
+                else PanelManager.Notification(player, "Erreur", "Vous devez renseigner une valeur", NotificationManager.Type.Error);
             });
             panel.AddButton("Retour", ui => PanelManager.NextPanel(player, ui, () => SetupGiveway(player, gw)));
             panel.AddButton("Fermer", ui => PanelManager.Quit(ui, player));
@@ -192,13 +193,13 @@ namespace MyGiveway
                 }
             }
 
-            panel.AddButton("Ajouter", ui =>PanelManager.NextPanel(player, ui, () => AddAreaId(player, gw)));
+            panel.AddButton("Ajouter", ui => PanelManager.NextPanel(player, ui, () => AddAreaId(player, gw)));
             panel.AddButton("Supprimer", ui =>
             {
                 ui.SelectTab();
                 PanelManager.NextPanel(player, ui, () => AreaList(player, gw));
             });
-            panel.AddButton("Retour", ui => PanelManager.NextPanel(player, ui, () => SetupGiveway(player, gw)));
+            panel.AddButton("Confirmer", ui => PanelManager.NextPanel(player, ui, () => SetupGiveway(player, gw)));
             panel.AddButton("Fermer", ui => PanelManager.Quit(ui, player));
 
             player.ShowPanelUI(panel);
@@ -213,7 +214,7 @@ namespace MyGiveway
             {
                 if (ui.inputText.Length > 0)
                 {
-                    
+
                     if (uint.TryParse(ui.inputText, out uint areaId))
                     {
                         if (!gw.AreasId.Contains(areaId))
@@ -228,9 +229,9 @@ namespace MyGiveway
                         }
                         else PanelManager.Notification(player, "Erreur", "Vous avez déjà ajouté ce terrain.", NotificationManager.Type.Error);
                     }
-                    else PanelManager.Notification(player, "Erreur", "Vous ne devez utiliser que des chiffres (négatif autorisés)", Life.NotificationManager.Type.Error);
+                    else PanelManager.Notification(player, "Erreur", "Vous ne devez utiliser que des chiffres (négatif autorisés)", NotificationManager.Type.Error);
                 }
-                else PanelManager.Notification(player, "Erreur", "Vous devez renseigner une valeur", Life.NotificationManager.Type.Error);
+                else PanelManager.Notification(player, "Erreur", "Vous devez renseigner une valeur", NotificationManager.Type.Error);
             });
             panel.AddButton("Retour", ui => PanelManager.NextPanel(player, ui, () => AreaList(player, gw)));
             panel.AddButton("Fermer", ui => PanelManager.Quit(ui, player));
@@ -263,7 +264,7 @@ namespace MyGiveway
                 ui.SelectTab();
                 PanelManager.NextPanel(player, ui, () => VehiclesList(player, gw));
             });
-            panel.AddButton("Retour", ui => PanelManager.NextPanel(player, ui, () => SetupGiveway(player, gw)));
+            panel.AddButton("Confirmer", ui => PanelManager.NextPanel(player, ui, () => SetupGiveway(player, gw)));
             panel.AddButton("Fermer", ui => PanelManager.Quit(ui, player));
 
             player.ShowPanelUI(panel);
@@ -300,10 +301,10 @@ namespace MyGiveway
                             else PanelManager.Notification(player, "Erreur", "Vous avez déjà ajouté ce véhicule.", NotificationManager.Type.Error);
                         }
                         else PanelManager.Notification(player, "Erreur", "Format de la valeur \"ID Véhicule\" invalide", NotificationManager.Type.Error);
-                    } 
+                    }
                     else PanelManager.Notification(player, "Erreur", "Format de la valeur \"quantité\" invalide", NotificationManager.Type.Error);
                 }
-                else PanelManager.Notification(player, "Erreur", "Vous devez respecter le format.\nID VEHICULE [ESPACE] QUANTITE", NotificationManager.Type.Error);             
+                else PanelManager.Notification(player, "Erreur", "Vous devez respecter le format.\nID VEHICULE [ESPACE] QUANTITE", NotificationManager.Type.Error);
             });
             panel.AddButton("Retour", ui => PanelManager.NextPanel(player, ui, () => VehiclesList(player, gw)));
             panel.AddButton("Fermer", ui => PanelManager.Quit(ui, player));
@@ -336,7 +337,7 @@ namespace MyGiveway
                 ui.SelectTab();
                 PanelManager.NextPanel(player, ui, () => ItemsList(player, gw));
             });
-            panel.AddButton("Retour", ui => PanelManager.NextPanel(player, ui, () => SetupGiveway(player, gw)));
+            panel.AddButton("Confirmer", ui => PanelManager.NextPanel(player, ui, () => SetupGiveway(player, gw)));
             panel.AddButton("Fermer", ui => PanelManager.Quit(ui, player));
 
             player.ShowPanelUI(panel);
