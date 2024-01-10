@@ -2,13 +2,12 @@
 
 # Novalife Plugin
 
-Ce plugin Novalife MyGiveway...
+Ce plugin Novalife MyGiveway permet de créer des codes cadeaux contenant des objets, véhicules, terrains ainsi que de l'argent.
 
 ## Table des Matières
 
 - [Installation](#installation)
 - [Utilisation](#utilisation)
-- [Fonctionnalités](#fonctionnalités)
 - [Droits de Propriété Intellectuelle](#droits-de-propriété-intellectuelle)
 
 ## Installation
@@ -18,15 +17,11 @@ Ce plugin Novalife MyGiveway...
 
 ## Utilisation
 
-Le Plugin MyGiveway...
+Vous devez posséder le plugin [MyMenu](https://github.com/Aarnow/NovaLife_MyMenu/releases) et être administrateur de votre serveur.
+Activez le service admin et ouvrez MyMenu pour accéder à la section "Admin".
+Vous y trouverez MyGiveway, où vous pourrez créer et configurer différents codes cadeaux.
 
-## Fonctionnalités
-
-Placez votre code à l'intérieur de la fonction OnPluginInit.
-
-```csharp
-
-```
+Les joueurs doivent ouvrir MyMenu pour accéder au panel qui les invite à entrer un code cadeau afin d'en bénéficier.
 
 ## Droits de Propriété Intellectuelle
 
