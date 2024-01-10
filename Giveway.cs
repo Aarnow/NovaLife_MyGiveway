@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Text;
-using I2.Loc.SimpleJSON;
 using Life;
 using Life.Network;
 using Newtonsoft.Json;
@@ -12,7 +9,7 @@ using UIPanelManager;
 namespace MyGiveway
 {
     public class Giveway
-    {
+    {    
         public string Slug { get; set; }
         public string Name { set; get; }
         public bool IsActive { get; set; }
@@ -31,27 +28,10 @@ namespace MyGiveway
             Name = "Default";
             IsActive = false;
             IsSingleUse = false;
-            Code = GenerateCode();
+            Code = Utils.GenerateCode();
             ExpirationDate = new DateTime(2050, 01, 01, 00, 00, 00);
             Money = 0;
             IsSaved = false;
-        }
-
-        private string GenerateCode()
-        {
-            const int codeLength = 8;
-            const string allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-            StringBuilder sb = new StringBuilder();
-            Random random = new Random();
-
-            for (int i = 0; i < codeLength; i++)
-            {
-                int index = random.Next(0, allowedChars.Length);
-                sb.Append(allowedChars[index]);
-            }
-
-            return sb.ToString();
         }
 
         public void Delete(Player player)

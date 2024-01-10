@@ -27,11 +27,17 @@ namespace MyGiveway
             //MyMenu
             try
             {
-                Section section = new Section(Section.GetSourceName(), Section.GetSourceName(), "v1.0.0", "Aarnow");
-                Action<UIPanel> action = ui => AdminPanels.Open(section.GetPlayer(ui));
-                section.OnlyAdmin = true;
-                section.Line = new UITabLine(section.Title, action);
-                section.Insert(true);
+                Section adminSection = new Section("Admin_"+Section.GetSourceName(), Section.GetSourceName(), "v1.0.0", "Aarnow");
+                Action<UIPanel> adminAction = ui => AdminPanels.Open(adminSection.GetPlayer(ui));
+                adminSection.OnlyAdmin = true;
+                adminSection.Line = new UITabLine(adminSection.Title, adminAction);
+                adminSection.Insert(true);
+
+                Section playerSection = new Section("Player_"+Section.GetSourceName(), Section.GetSourceName(), "v1.0.0", "Aarnow");
+                Action<UIPanel> playerAction = ui => PlayerPanels.Open(playerSection.GetPlayer(ui));
+                playerSection.OnlyAdmin = false;
+                playerSection.Line = new UITabLine(playerSection.Title, playerAction);
+                playerSection.Insert(false);
             }
             catch (Exception ex)
             {
